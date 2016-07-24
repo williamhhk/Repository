@@ -1,0 +1,29 @@
+﻿Install-Package Ninject.MVC5 
+Install-Package Ninject.WebApi.DependencyResolver 
+Install-Package ninject.extensions.conventions
+Install-Package Ninject.Web.WebApi 
+
+
+private static IKernel CreateKernel()
+{
+    var kernel = new StandardKernel();
+    try
+    {
+        System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver = new Ninject.WebApi.DependencyResolver.NinjectDependencyResolver(kernel);
+        kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+        kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+
+        kernel.Bind(x =>
+        {
+            x.FromThisAssembly().SelectAllClasses().BindDefaultInterface();
+        });
+
+        RegisterServices(kernel);
+        return kernel;
+    }
+    catch
+    {
+        kernel.Dispose();
+        throw;
+    }
+}

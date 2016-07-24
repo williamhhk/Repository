@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Repository.UnitOfWork
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork<out TContext> : IDisposable
     {
         int SaveChanges();
-        IContext Context { get; }
+        TContext Context { get; }
     }
 }

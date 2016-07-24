@@ -1,5 +1,6 @@
 ﻿using Repository.Infrastructure;
 using System.Data.Entity;
+using System;
 
 namespace Repository.DataContext
 {
@@ -11,6 +12,11 @@ namespace Repository.DataContext
         public void SyncObjectState<TEntity>(TEntity entity) where TEntity : class, IObjectState
         {
             Entry(entity).State = StateHelper.ConvertState(entity.ObjectState);
+        }
+
+        IDbSet<TEntity> IContext.Set<TEntity>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

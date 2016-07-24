@@ -1,59 +1,51 @@
 ﻿using Demo.Entities.Models;
+using Repository.Extensions;
 using Repository.Respository;
 using Repository.UnitOfWork;
+using System;
+using System.Linq;
 
 using System.Web.Mvc;
 
-namespace Repository.Web.Controllers
-{
-    public class HomeController : Controller
+namespace MVC.Web.Controllers
+{    public class HomeController : Controller
     {
+        private IRepository<Customer> _repoCustomer;
+        private IReadOnlyRepository<Stock> _repoStock;
+        public HomeController(IUnitOfWork<DemoDbContext> uow1, IUnitOfWork<HomeCinemaDbContext> uow2)
+        {
+            _repoCustomer = new Repository<Customer>(uow1);
+            _repoStock = new ReadOnlyRepository<Stock>(uow2);
+        }
+
         public ActionResult Index()
         {
-            using (var test = new DemoDbContext())
-            {
-                //Trace.WriteLine(test1);
-
-            }
-                return View();
+            return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            var userId = User.Identity.Name;
 
-            using (IUnitOfWork uow = new UnitOfWork<DemoDbContext>())
-            {
-                IRepository<Customer> customerRepository = new Repository<Customer>(uow);
-                
-                customerRepository.Insert(
-                new Customer
-                {
-                    Id = 10000,
-                    Name = "Hello",
-                    Address = "1234 E 1st Street",
-                    City = "LalaLand, LALA",
-                    Country = "USA",
-                    Age = 20
-                });
-                uow.SaveChanges();
+            var customers = _repoCustomer.Find(2);
+            var stock = _repoStock.Find(2);
+            var stock1 = _repoStock.SqlQuery("select Id, MovieId from [dbo].[Stock]");
 
-            }
-
-
+            Converter<double, DateTime> converter = d => new DateTime(2010, 1, 1).AddDays(d);
+            
             return View();
         }
 
         public ActionResult Contact()
         {
 
-            using (IUnitOfWork uow = new UnitOfWork<DemoDbContext>())
-            {
-                IRepository<Customer> customerRepository = new Repository<Customer>(uow);
+            //using (IUnitOfWork uow = new UnitOfWork<DemoDbContext>())
+            //{
+            //    IRepository<Customer> customerRepository = new Repository<Customer>(uow);
 
-                var test = customerRepository.Find(1); 
+            //    var test = customerRepository.Find(1); 
 
-            }
+            //}
             return View();
         }
     }

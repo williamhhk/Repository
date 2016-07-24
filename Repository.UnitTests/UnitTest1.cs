@@ -1,35 +1,21 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Repository.UnitOfWork;
-using Repository.Respository;
 using Demo.Entities.Models;
-
+using Moq;
+using Repository.Web.Controllers;
 
 namespace Repository.UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitAboutControllerTestsTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void AboutControllerTests()
         {
-            
-            using (IUnitOfWork uow = new UnitOfWork<DemoDbContext>())
-            {
-                IRepository<Customer> customerRepository = new Repository<Customer>(uow);
-
-                customerRepository.Insert(
-                new Customer
-                {
-                    Id = 123,
-                    Name = "Hello",
-                    Address = "2964 E Shannon",
-                    City = "Gilbert, AZ",
-                    Country = "USA",
-                    Age = 20
-                });
-                uow.SaveChanges();
-
-            }
+            var mockUow = new Mock<IUnitOfWork<DemoDbContext>>();
+            var mockUow1 = new Mock<IUnitOfWork<HomeCinemaDbContext>>();
+            var controller = new ValuesController(mockUow.Object, mockUow1.Object);
+            var result = controller.TestOne();
         }
     }
 }

@@ -1,13 +1,8 @@
 ﻿using Repository.DataContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.UnitOfWork
 {
-    public class UnitOfWork<TContext> : IUnitOfWork where TContext : IContext, new()
+    public class UnitOfWork<TContext> : IUnitOfWork <TContext> where TContext : IContext, new()
     {
         private readonly IContext _context;
         public UnitOfWork()
@@ -26,7 +21,7 @@ namespace Repository.UnitOfWork
         {
             _context.Dispose();
         }
-                public IContext Context
+        public TContext Context
         {
             get { return (TContext)_context; }
         }

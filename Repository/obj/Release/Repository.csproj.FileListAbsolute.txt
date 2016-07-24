@@ -1,0 +1,13 @@
+F:\csharp\Repository\Repository\bin\Release\Repository.dll.config
+F:\csharp\Repository\Repository\bin\Release\Repository.dll
+F:\csharp\Repository\Repository\bin\Release\Repository.pdb
+F:\csharp\Repository\Repository\bin\Release\EntityFramework.dll
+F:\csharp\Repository\Repository\bin\Release\EntityFramework.SqlServer.dll
+F:\csharp\Repository\Repository\bin\Release\Iesi.Collections.dll
+F:\csharp\Repository\Repository\bin\Release\NHibernate.dll
+F:\csharp\Repository\Repository\bin\Release\EntityFramework.xml
+F:\csharp\Repository\Repository\bin\Release\EntityFramework.SqlServer.xml
+F:\csharp\Repository\Repository\bin\Release\Iesi.Collections.xml
+F:\csharp\Repository\Repository\bin\Release\NHibernate.xml
+F:\csharp\Repository\Repository\obj\Release\Repository.dll
+F:\csharp\Repository\Repository\obj\Release\Repository.pdb

@@ -3,55 +3,46 @@ using Repository.Infrastructure;
 using Repository.UnitOfWork;
 using System.Data.Entity;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace Repository.Respository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IObjectState
     {
         private readonly IContext _context;
-        private readonly DbSet<TEntity> _dbSet;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork<IContext> _unitOfWork;
+        private IDbSet<TEntity> _entity;
 
-        public Repository(IUnitOfWork unitOfWork)
+        public Repository(IUnitOfWork<IContext> unitOfWork)
         {
             _context = unitOfWork.Context;
             _unitOfWork = unitOfWork;
+        }
 
-            var dbContext = _context as DbContext;
-
-            if (dbContext != null)
+        private IDbSet<TEntity> Entity
+        {
+            get
             {
-                _dbSet = dbContext.Set<TEntity>();
+                if (_entity == null)
+                    _entity = _context.Set<TEntity>();
+                return _entity;
             }
-            //else
-            //{
-            //    var fakeContext = context as FakeDbContext;
-
-            //    if (fakeContext != null)
-            //    {
-            //        _dbSet = fakeContext.Set<TEntity>();
-            //    }
-            //}
         }
 
         public virtual TEntity Find(int id)
         {
-            return _dbSet.Find(id);
+            return Entity.Find(id);
         }
         public virtual TEntity Find(params object[] keyValues)
         {
-            return _dbSet.Find(keyValues);
-        }
-
-        public virtual IQueryable<TEntity> SelectQuery(string query, params object[] parameters)
-        {
-            return _dbSet.SqlQuery(query, parameters).AsQueryable();
+            return Entity.Find(keyValues);
         }
 
         public virtual void Update(TEntity entity)
         {
             entity.ObjectState = ObjectState.Modified;
-            _dbSet.Attach(entity);
+            Entity.Attach(entity);
             _context.SyncObjectState(entity);
         }
 
@@ -59,12 +50,12 @@ namespace Repository.Respository
         {
             if (entity.ObjectState == ObjectState.Added)
             {
-                _dbSet.Add(entity);
+                Entity.Add(entity);
             }
             else
             {
                 entity.ObjectState = ObjectState.Modified;
-                _dbSet.Add(entity);
+                Entity.Add(entity);
             }
             _context.SyncObjectState(entity);
 
@@ -73,9 +64,13 @@ namespace Repository.Respository
         public virtual void Delete(TEntity entity)
         {
             entity.ObjectState = ObjectState.Deleted;
-            _dbSet.Attach(entity);
+            Entity.Attach(entity);
             _context.SyncObjectState(entity);
         }
 
+        public IEnumerable<TEntity> SqlQuery(string query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
